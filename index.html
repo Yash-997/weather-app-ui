@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Atmos</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>">
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="atmos-bg" aria-hidden="true"></div>
+
+    <main class="atmos-app">
+      <!-- Top Header Bar -->
+      <header class="atmos-header">
+        <div class="header-left">
+          <div class="location-block">
+            <h1 id="city">—</h1>
+            <span class="country" id="region">—</span>
+          </div>
+          <p class="updated-label"><span id="local-time"></span> · <span id="updated">Updated just now</span></p>
+        </div>
+        <div class="header-right">
+          <div class="header-weather" id="weather-illustration" aria-hidden="true"></div>
+        </div>
+      </header>
+
+      <!-- Search (kept for backend) -->
+      <div class="search-row">
+        <input id="city-input" type="text" placeholder="Search city..." aria-label="City" />
+        <input id="days-input" type="number" min="1" max="7" value="7" aria-label="Days" />
+        <button id="load-btn" class="btn-search">Search</button>
+      </div>
+
+      <!-- Main Hero Card -->
+      <section class="atmos-hero" id="current-weather">
+        <div class="hero-inner">
+          <div class="temp-block">
+            <div id="weather-bg"></div>
+            <div class="temp-main">
+              <span class="temp-value" id="temp">--</span>
+              <span class="temp-unit">°</span>
+            </div>
+              <div class="humidity-row">
+                <span class="humidity-label">Feels Like</span>
+                <span class="humidity-value" id="feelslike">—</span>
+              </div>
+              <div class="humidity-row">
+                <span class="humidity-label">Wind</span>
+                <span class="humidity-value" id="wind">—</span>
+              </div>
+              <div class="humidity-row">
+                <span class="humidity-label">Precip</span>
+                <span class="humidity-value" id="precip">—</span>
+              </div>
+          </div>
+          <p class="condition-label" id="condition">—</p>
+          <div class="humidity-row">
+            <span class="humidity-label">Humidity</span>
+            <span class="humidity-value" id="humidity">—</span>
+          </div>
+          <div class="humidity-bar-wrap">
+            <div class="humidity-bar">
+              <div class="humidity-fill" id="humidity-fill"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- High / Low (from first forecast day) -->
+      <div class="highlow-row">
+        <span class="high-temp" id="high-temp">—</span>
+        <span class="sep">/</span>
+        <span class="low-temp" id="low-temp">—</span>
+      </div>
+
+      <!-- Forecast Overview -->
+      <section class="forecast-section">
+        <h2 class="forecast-title">Forecast Overview</h2>
+        <div class="forecast-row" id="forecast-container" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <div id="loader" class="atmos-loader" aria-hidden="true">
+      <div class="loader-spinner"></div>
+    </div>
+
+    <div id="notice" class="atmos-notice" role="status"></div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

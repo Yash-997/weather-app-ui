@@ -1,0 +1,529 @@
+
+/* ============================================
+   ATMOS — Premium Glassmorphism Weather Dashboard
+   ============================================ */
+
+:root {
+  --bg-dark: #0c0e14;
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-strong: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --text: #f0f2f6;
+  --text-muted: #9ca3b4;
+  --neon-cyan: #22d3ee;
+  --neon-blue: #60a5fa;
+  --neon-violet: #a78bfa;
+  --neon-glow: rgba(34, 211, 238, 0.35);
+  --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 20px;
+}
+
+/* Dynamic background by weather */
+.atmos-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  transition: background 1.2s var(--ease);
+  background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 40%, #0c0e14 100%);
+}
+
+body[data-weather="sunny"] .atmos-bg,
+body[data-weather="clear"] .atmos-bg {
+  background: linear-gradient(160deg, #1c1917 0%, #422006 35%, #0c0e14 100%);
+}
+
+body[data-weather="cloudy"] .atmos-bg,
+body[data-weather="overcast"] .atmos-bg {
+  background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 45%, #0c0e14 100%);
+}
+
+body[data-weather="rain"] .atmos-bg,
+body[data-weather="drizzle"] .atmos-bg {
+  background: linear-gradient(160deg, #0c1222 0%, #1e3a5f 50%, #0f172a 100%);
+}
+
+body[data-weather="thunder"] .atmos-bg {
+  background: linear-gradient(160deg, #0a0a0f 0%, #1e1b4b 45%, #0c0e14 100%);
+}
+
+body[data-weather="snow"] .atmos-bg {
+  background: linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #0c0e14 100%);
+}
+
+body[data-weather="mist"] .atmos-bg {
+  background: linear-gradient(160deg, #0f172a 0%, #334155 45%, #0c0e14 100%);
+}
+
+body[data-weather="night"] .atmos-bg {
+  background: linear-gradient(160deg, #030712 0%, #1e1b4b 45%, #0c0e14 100%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.atmos-app {
+  min-height: 100vh;
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ----- Header ----- */
+.atmos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-deep);
+}
+
+.header-left .location-block {
+  margin-bottom: 6px;
+}
+
+.header-left h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.header-left .country {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.updated-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-weather {
+  width: 64px;
+  height: 64px;
+  opacity: 0.9;
+}
+
+.header-weather svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ----- Search row ----- */
+.search-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+#city-input {
+  flex: 1;
+  min-width: 180px;
+  padding: 12px 16px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+  backdrop-filter: blur(10px);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#city-input::placeholder {
+  color: var(--text-muted);
+}
+
+#city-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 0 2px var(--neon-glow);
+}
+
+#days-input {
+  width: 60px;
+  padding: 12px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  color: var(--text);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.btn-search {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
+  border: none;
+  border-radius: 14px;
+  color: #0c0e14;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-search:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--neon-glow);
+}
+
+/* ----- Hero card ----- */
+.atmos-hero {
+  position: relative;
+  margin-bottom: 16px;
+  padding: 40px 32px;
+  background: var(--glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-deep);
+  animation: heroFloat 8s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.atmos-hero:hover {
+  animation: none;
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5), 0 0 40px var(--neon-glow);
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.temp-block {
+  position: relative;
+  display: inline-block;
+}
+
+#weather-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.25;
+  filter: blur(3px);
+  transition: opacity 0.5s var(--ease);
+}
+
+#weather-bg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.temp-main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.temp-value {
+  font-size: 5.5rem;
+  font-weight: 200;
+  letter-spacing: -4px;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-violet));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 60px var(--neon-glow);
+}
+
+.temp-unit {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--text-muted);
+}
+
+.condition-label {
+  font-size: 1.35rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  text-transform: capitalize;
+}
+
+.humidity-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 0.9rem;
+}
+
+.humidity-label {
+  color: var(--text-muted);
+}
+
+.humidity-value {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.humidity-bar-wrap {
+  margin-top: 8px;
+}
+
+.humidity-bar {
+  height: 8px;
+  background: var(--glass-strong);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.humidity-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan));
+  border-radius: 4px;
+  transition: width 0.6s var(--ease);
+}
+
+/* ----- Small readouts beneath temperature (feelslike, wind, precip) ----- */
+/* Target only the rows inside the temp-block so humidity bar row is unaffected */
+.temp-block > .humidity-row {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  align-items: baseline;
+  margin-top: 8px;
+  line-height: 1.2;
+}
+
+.temp-block .humidity-label {
+  color: var(--text-muted);
+  font-size: 0.95rem; /* slightly smaller than the numeric value */
+  flex: none;
+}
+
+/* Numeric values should match the temperature gradient/color and be slightly bold */
+#feelslike,
+#wind,
+#precip {
+  font-weight: 600;
+  font-size: 1.05rem; /* smaller than main temp, larger than label */
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-violet));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 36px var(--neon-glow);
+}
+
+/* High / Low row */
+.highlow-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 0 8px;
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.high-temp {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sep {
+  color: var(--text-muted);
+}
+
+.low-temp {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ----- Forecast strip ----- */
+.forecast-section {
+  margin-bottom: 20px;
+  margin-top: 16px;
+  width: 100%;
+  display: block;
+}
+
+.forecast-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.forecast-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 0 8px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.forecast-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.forecast-row::-webkit-scrollbar-track {
+  background: var(--glass);
+  border-radius: 3px;
+}
+
+.forecast-row::-webkit-scrollbar-thumb {
+  background: var(--neon-cyan);
+  border-radius: 3px;
+}
+
+.forecast-card {
+  min-width: 140px;
+  scroll-snap-align: start;
+  padding: 18px;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.forecast-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4), 0 0 24px var(--neon-glow);
+}
+
+.forecast-date {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.forecast-icon {
+  width: 48px;
+  height: 48px;
+  margin: 8px 0;
+  opacity: 0.9;
+}
+
+.forecast-temps {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.forecast-temp-item {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+}
+
+.forecast-temp-value {
+  font-weight: 600;
+  color: var(--text);
+}
+
+
+
+
+/* ----- Loader ----- */
+.atmos-loader {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(12, 14, 20, 0.8);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+}
+
+.atmos-loader.show {
+  display: grid;
+}
+
+.loader-spinner {
+  width: 52px;
+  height: 52px;
+  border: 3px solid var(--glass-border);
+  border-top-color: var(--neon-cyan);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ----- Notice ----- */
+.atmos-notice {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  padding: 14px 24px;
+  background: var(--glass-strong);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+  z-index: 1001;
+  box-shadow: var(--shadow-deep);
+}
+
+.atmos-notice.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .atmos-app { padding: 16px; }
+  .atmos-hero { padding: 28px 20px; }
+  .temp-value { font-size: 4rem; }
+  .temp-unit { font-size: 1.75rem; }
+  .forecast-card { min-width: 120px; }
+}
